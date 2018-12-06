@@ -16,6 +16,7 @@ const findMinInObj = (obj) => {
       break;
     }
   }
+  // Note: null if one point has same distance with multiple IDs
   if (Object.keys(obj).find(x => x !== id && obj[x] === obj[id])) return null;
   return id;
 };
@@ -37,51 +38,33 @@ const findMinInObj = (obj) => {
           generateMap(map, i, j);
         }
       }
-      // Note: assign points
-      for (let i = 1; i <= list.length; i++) {
-        const [x, y] = list[i - 1].split(',').map(c => c.trim());
-        map[x][y] = {id: i};
-      }
-      // Note: calculate distances
+      // // Note: assign points
       for (let i = minX; i <= maxX; i++) {
         for (let j = minY; j <= maxY; j++) {
-          if (map[i][j] && map[i][j].id) {
-            const id = map[i][j].id;
-            for (let x = minX; x <= maxX; x++) {
-              for (let y = minY; y <= maxY; y++) {
-                if (!map[x][y].id) {
-                  const existingMap = map[x][y].idMap;
-                  const distance = Math.abs(i - x) + Math.abs(j - y);
-                  map[x][y] = {idMap: {...existingMap, [id]: distance}};
-                }
-              }
-            }
+          if (map[i][j] && !map[i][j].id) {
+            const idMap = list.reduce((obj, item, p) => {
+              const index = p + 1;
+              const [x, y] = item.split(',').map(c => c.trim());
+              const distance = Math.abs(x - i) + Math.abs(y - j);
+              return {...obj, [index]: distance};
+            }, {});
+            map[i][j] = findMinInObj(idMap);
           }
         }
       }
-      // Note: get ownership
-      for (let i = minX; i <= maxX; i++) {
-        for (let j = minY; j <= maxY; j++) {
-          if (map[i][j] && map[i][j].idMap) {
-            const idMap = map[i][j].idMap;
-            const id = findMinInObj(idMap);
-            map[i][j] = id ? {id: Number(id)} : null;
-          }
-        }
-      }
-      // Note: remove borders (inifite)
+      // Note: remove borders (infinity)
       const infinityIdList = [
-        ...Object.keys(map).filter(key => map[key][minY] && map[key][minY].id).map(key => map[key][minY].id),
-        ...Object.keys(map).filter(key => map[key][maxY] && map[key][maxY].id).map(key => map[key][maxY].id),
-        ...Object.values(map[minX]).filter(x => x && x.id).map(x => x.id),
-        ...Object.values(map[maxX]).filter(x => x && x.id).map(x => x.id),
+        ...Object.keys(map).filter(key => map[key][minY]).map(key => map[key][minY]),
+        ...Object.keys(map).filter(key => map[key][maxY]).map(key => map[key][maxY]),
+        ...Object.values(map[minX]).filter(x => x),
+        ...Object.values(map[maxX]).filter(x => x),
       ].reduce((list, x) => list.includes(x) ? list : [...list, x], []);
       // Note: count area
       let countMap = {};
       for (let i = minX; i <= maxX; i++) {
         for (let j = minY; j <= maxY; j++) {
-          if (map[i][j] && map[i][j].id && !infinityIdList.includes(map[i][j].id)) {
-            const id = map[i][j].id;
+          if (map[i][j] && !infinityIdList.includes(map[i][j])) {
+            const id = map[i][j];
             const count = countMap[id] || 0;
             countMap = {
               ...countMap,
