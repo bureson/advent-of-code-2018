@@ -38,7 +38,7 @@ const generateRequirements = (charA, charZ) => {
         });
         // Note: add new stuff to the pipeline
         if (Object.keys(pipeline).length < workers && pairs.length > 0) {
-          const dependencyMap = Object.keys(requirements).filter(l => !completed.includes(l)).reduce((obj, letter) => {
+          const dependencyMap = pairs.reduce((list, pair) => list.includes(pair[0]) ? list : [...list, pair[0]], []).reduce((obj, letter) => {
             const dependencyCount = pairs.filter(pair => pair[1] === letter).length;
             return {...obj, [letter]: dependencyCount};
           }, {});
