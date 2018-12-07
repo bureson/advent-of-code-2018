@@ -15,6 +15,7 @@ const generateRequirements = (charA, charZ) => {
       const workers = 5;
       const list = data.split('\r\n').filter(x => !!x);
       const requirements = generateRequirements('A', 'Z');
+      let completed = [];
       let pairs = list.map(i => [i.slice(5, 6), i.slice(36, 37)]);
       let time = -1;
       let pipeline = {};
@@ -23,6 +24,7 @@ const generateRequirements = (charA, charZ) => {
         // Note: remove completed items from pipeline
         Object.keys(pipeline).forEach(key => {
           if ((time - pipeline[key]) === requirements[key]) {
+            completed.push(key);
             delete pipeline[key];
             const newPairs = pairs.filter(pair => pair[0] !== key);
             if (newPairs.length === 0) {
