@@ -24,8 +24,8 @@ const assign = (map, x, y, value) => {
           assign(map, i, j, fuelLevel);
         }
       }
-      for (let i = 1; i <= 297; i++) {
-        for (let j = 1; j <= 297; j++) {
+      for (let i = 1; i <= 300; i++) {
+        for (let j = 1; j <= 300; j++) {
           const maxBoxSize = 300 - Math.max(j, i);
           for (let b = 1; b <= maxBoxSize; b++) {
             let sum = 0;
