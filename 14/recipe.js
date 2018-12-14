@@ -8,8 +8,8 @@ const fs = require('fs');
       let firstElf = 0;
       let secondElf = 1;
       while (scoreBoard.length < (input + 11)) {
-        firstElf = (firstElf + scoreBoard[firstElf] + 1) > (scoreBoard.length - 1) ? (firstElf + scoreBoard[firstElf] + 1) % scoreBoard.length : (firstElf + scoreBoard[firstElf] + 1);
-        secondElf = (secondElf + scoreBoard[secondElf] + 1) > (scoreBoard.length - 1) ? (secondElf + scoreBoard[secondElf] + 1) % scoreBoard.length : (secondElf + scoreBoard[secondElf] + 1);
+        firstElf = (firstElf + scoreBoard[firstElf] + 1) % scoreBoard.length;
+        secondElf = (secondElf + scoreBoard[secondElf] + 1) % scoreBoard.length;
         (scoreBoard[firstElf] + scoreBoard[secondElf]).toString().split('').forEach(x => scoreBoard.push(Number(x)));
       }
       console.log(scoreBoard.slice(input, input + 10).join(''));

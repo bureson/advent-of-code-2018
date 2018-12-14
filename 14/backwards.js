@@ -11,8 +11,8 @@ const fs = require('fs');
       // and since the script below is quite fast, it is more efficient to build the scoreBoard first
       // and only then look for the index of input
       while (scoreBoard.length < 50000000) {
-        firstElf = (firstElf + scoreBoard[firstElf] + 1) > (scoreBoard.length - 1) ? (firstElf + scoreBoard[firstElf] + 1) % scoreBoard.length : (firstElf + scoreBoard[firstElf] + 1);
-        secondElf = (secondElf + scoreBoard[secondElf] + 1) > (scoreBoard.length - 1) ? (secondElf + scoreBoard[secondElf] + 1) % scoreBoard.length : (secondElf + scoreBoard[secondElf] + 1);
+        firstElf = (firstElf + scoreBoard[firstElf] + 1) % scoreBoard.length;
+        secondElf = (secondElf + scoreBoard[secondElf] + 1) % scoreBoard.length;
         (scoreBoard[firstElf] + scoreBoard[secondElf]).toString().split('').forEach(x => scoreBoard.push(Number(x)));
       }
       console.log(scoreBoard.join('').indexOf(input));
